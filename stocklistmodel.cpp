@@ -58,6 +58,26 @@ public:
                     }
                     else if(elementName == "name")
                     {
+                        stock->append(reader.readElementText().toUtf8());
+                    }
+                    else if(elementName == "latestPrice")
+                    {
+                        stock->append(reader.readElementText().toLatin1());
+                    }
+                    else if(elementName == "change")
+                    {
+                        stock->append(reader.readElementText().toLatin1());
+                    }
+                    else if(elementName == "quoteChange")
+                    {
+                        stock->append(reader.readElementText().toLatin1());
+                    }
+                    else if(elementName == "highestLowest")
+                    {
+                        stock->append(reader.readElementText().toLatin1());
+                    }
+                    else if(elementName == "takeProfitStopLoss")
+                    {
                         stock->append(reader.readElementText().toLatin1());
                     }
                 }
@@ -77,7 +97,6 @@ public:
                 m_bError = true;
                 m_strError = reader.errorString();
             }
-
         }
     void reset()
     {

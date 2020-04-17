@@ -73,13 +73,13 @@ Window {
                             text: code;
                             color: wrapper.ListView.isCurrentItem ? "red" : "black";
                             font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
-                            Layout.preferredWidth: 80;
+                            Layout.preferredWidth: 100;
                         }
                         Text {
                             text: name;
                             color: wrapper.ListView.isCurrentItem ? "red" : "black";
                             font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
-                            Layout.preferredWidth: 80;
+                            Layout.preferredWidth: 100;
                         }
                         Text {
                             text: latestPrice;
@@ -150,13 +150,13 @@ Window {
                             text: qsTr("代码");
                             font.bold: true;
                             font.pixelSize: 20;
-                            Layout.preferredWidth: 80;
+                            Layout.preferredWidth: 100;
                         }
                         Text {
                             text: qsTr("名字");
                             font.bold: true;
                             font.pixelSize: 20;
-                            Layout.preferredWidth: 80;
+                            Layout.preferredWidth: 100;
                         }
                         Text {
                             text: qsTr("最新价");
@@ -205,7 +205,7 @@ Window {
             RowLayout {
                 Rectangle {
                     id: rectangle_Information;
-                    width: 640
+                    width: 700
                     height: 400
 
                     //anchors.top: row_top.bottom;
@@ -269,7 +269,7 @@ Window {
                     //anchors.leftMargin: 4;
                     width: 545;
                     height: 300;
-                    property var minuteLine1: "http://image.sinajs.cn/newchart/min/n/sh000001.gif";
+                    property var minuteLine1: "http://image.sinajs.cn/newchart/min/n/sz000001.gif";
                     property var minuteLine2: "http://image.sinajs.cn/newchart/min/n/sh000002.gif";
 
                     property var minuteLine: ""
