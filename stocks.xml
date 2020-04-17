@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<stocks>
+  <remindMode>0</remindMode>
+  <stock>
+    <code>sz000156</code>
+    <name>华数传媒</name>
+  </stock>
+  <stock>
+    <code>sz000166</code>
+    <name>申万宏源</name>
+  </stock>
+  <stock>
+    <code>sz000576</code>
+    <name>广东甘化</name>
+    <stopwin>6.79</stopwin>
+    <stoplose>6.77</stoplose>
+  </stock>
+</stocks>
