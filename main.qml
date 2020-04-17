@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
+import com.qt.CModel 1.0
 
 Window {
     visible: true
@@ -214,7 +215,8 @@ Window {
                         anchors.fill: parent;
 
                         delegate: stockDelegate;
-                        model: stockModel.createObject(listView);
+                        //model: stockModel.createObject(listView);
+                        model: StockListModel{source: "stocks.xml";}
                         header: headerView;
                         footer: footerView;
                         highlight: Rectangle {
