@@ -12,7 +12,7 @@ Window {
 
     Rectangle {
         width: 1500
-        height: 400
+        height: 800
 
         ColumnLayout {
             anchors.top: parent.top;
@@ -212,7 +212,7 @@ Window {
                 Rectangle {
                     id: rectangle_Information;
                     width: 1365
-                    height: 400
+                    height: 620
 
                     //anchors.top: row_top.bottom;
                     //anchors.topMargin: 4;

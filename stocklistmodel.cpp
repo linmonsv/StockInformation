@@ -91,6 +91,36 @@ public:
                 m_strError = reader.errorString();
             }
         }
+    void save()
+    {
+        int count = m_stocks.size();
+        if(count == 0)
+        {
+            return;
+        }
+
+        QFile file("stocks.xml");
+        if(!file.open(QFile::WriteOnly | QFile::Truncate))
+        {
+            qDebug() << "open stocks for write failed";
+            return;
+        }
+
+        QTextStream out(&file);
+        out.setCodec("UTF-8");
+        out << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+        out << "<stocks>\n";
+
+        for(int i = 0; i < count; i++)
+        {
+            out << "  <stock>\n";
+            out << "    <code>" << (*m_stocks[i])[0] << "</code>\n";
+            out << "    <name>" << (*m_stocks[i])[1] << "</name>\n";
+            out << "  </stock>\n";
+        }
+        out << "</stocks>";
+        file.close();
+    }
     void reset()
     {
         m_bError = false;
@@ -126,6 +156,7 @@ StockListModel::StockListModel(QObject* parent)
 }
 StockListModel::~StockListModel()
 {
+    m_dptr->save();
     delete m_dptr;
 }
 int StockListModel::rowCount(const QModelIndex &parent) const
@@ -188,6 +219,7 @@ void StockListModel::remove(int index)
 }
 void StockListModel::onTimeout()
 {
+    m_timer.stop();//TODO ignore it if you really want to use this code.
     QString strUrl_start = "http://hq.sinajs.cn/list=";
     QString strUrl = "";
     auto stock_total = m_dptr->m_stocks.size();
@@ -244,7 +276,7 @@ void StockListModel::onRefreshFinished()
         qDebug() << "成交金额 : " << informations[9];
         qDebug() << "最近更新日期时间 : " << informations[30] + " " + informations[31];
         {
-            update(index, 1, informations[0]);
+            update(index, 1, informations[0].mid(1));
             update(index, 2, informations[1]);
             update(index, 3, informations[2]);
             update(index, 4, informations[3]);
