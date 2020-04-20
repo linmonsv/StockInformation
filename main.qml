@@ -131,6 +131,7 @@ Window {
                 Item {
                     width: parent.width;
                     height: 30;
+                    z: 2;
                     RowLayout {
                         anchors.left: parent.left;
                         anchors.verticalCenter: parent.verticalCenter;
@@ -219,6 +220,7 @@ Window {
                     ListView {
                         id: listView;
                         anchors.fill: parent;
+                        headerPositioning : ListView.OverlayHeader
 
                         delegate: stockDelegate;
                         //model: stockModel.createObject(listView);
