@@ -3,6 +3,8 @@
 #include <QVector>
 #include <QFile>
 #include <QDebug>
+#include <QDateTime>
+
 typedef QVector<QString> StockData;
 class StockListModelPrivate
 {
@@ -127,7 +129,9 @@ StockListModel::StockListModel(QObject* parent)
     :QAbstractListModel(parent)
     , m_dptr(new StockListModelPrivate)
 {
-
+    qsrand(QDateTime::currentDateTime().toTime_t());
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+    m_timer.start(3000);
 }
 StockListModel::~StockListModel()
 {
@@ -184,4 +188,8 @@ void StockListModel::remove(int index)
     beginRemoveRows(QModelIndex(), index, index);
     delete m_dptr->m_stocks.takeAt(index);
     endRemoveRows();
+}
+void StockListModel::onTimeout()
+{
+    qDebug() << "Timeout";
 }

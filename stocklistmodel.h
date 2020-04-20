@@ -1,6 +1,8 @@
 #ifndef STOCKLISTMODEL_H
 #define STOCKLISTMODEL_H
 #include <QAbstractListModel>
+#include <QTimer>
+
 class StockListModelPrivate;
 class StockListModel : public QAbstractListModel
 {
@@ -19,8 +21,11 @@ public:
     Q_INVOKABLE bool hasError() const;
     Q_INVOKABLE void reload();
     Q_INVOKABLE void remove(int index);
+protected slots:
+    void onTimeout();
 private:
     StockListModelPrivate *m_dptr;
+    QTimer m_timer;
 };
 
 #endif // STOCKLISTMODEL_H
