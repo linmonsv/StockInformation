@@ -188,9 +188,16 @@ void StockListModel::remove(int index)
 }
 void StockListModel::onTimeout()
 {
-    qDebug() << "Timeout";
-    QString strUrl = "http://hq.sinajs.cn/list=sz000001";
-    QUrl qurl(strUrl);
+    QString strUrl_start = "http://hq.sinajs.cn/list=";
+    QString strUrl = "";
+    auto stock_total = m_dptr->m_stocks.size();
+    for(auto i = 0; i < stock_total; i ++) {
+        strUrl += get(i, 0).toString();
+        if(i < stock_total - 1) {
+            strUrl += ",";
+        }
+    }
+    QUrl qurl(strUrl_start + strUrl);
     QNetworkRequest req(qurl);
     m_reply = m_nam.get(req);
     connect(m_reply, SIGNAL(error(QNetworkReply::NetworkError)),
@@ -222,11 +229,10 @@ void StockListModel::onRefreshFinished()
 
     qDebug() << Result;
     auto stockArray = Result.split(";");
-    foreach(QString oneStock, stockArray) {
-        qDebug() << oneStock;
-        if(oneStock.length() < 20)
+    for(auto index = 0; index < stockArray.size(); index ++) {
+        if(stockArray[index].length() < 20)
             break;
-        auto code_informations = oneStock.split("=");
+        auto code_informations = stockArray[index].split("=");
         qDebug() << "code : " << code_informations[0].mid(14);
         auto informations = code_informations[1].split(",");
         qDebug() << "股票名字 : " << informations[0];
@@ -238,14 +244,14 @@ void StockListModel::onRefreshFinished()
         qDebug() << "成交金额 : " << informations[9];
         qDebug() << "最近更新日期时间 : " << informations[30] + " " + informations[31];
         {
-            update(0, 1, informations[0]);
-            update(0, 2, informations[1]);
-            update(0, 3, informations[2]);
-            update(0, 4, informations[3]);
-            update(0, 5, informations[4] + "/" + informations[5]);
-            update(0, 6, QString("%1").arg(informations[8].toDouble() / 100.0));
-            update(0, 7, QString("%1").arg(informations[9].toDouble() / 10000.0));
-            update(0, 8, informations[30] + " " + informations[31]);
+            update(index, 1, informations[0]);
+            update(index, 2, informations[1]);
+            update(index, 3, informations[2]);
+            update(index, 4, informations[3]);
+            update(index, 5, informations[4] + "/" + informations[5]);
+            update(index, 6, QString("%1").arg(informations[8].toDouble() / 100.0));
+            update(index, 7, QString("%1").arg(informations[9].toDouble() / 10000.0));
+            update(index, 8, informations[30] + " " + informations[31]);
         }
     }
 
