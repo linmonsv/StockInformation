@@ -12,6 +12,7 @@ public:
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
     QHash<int, QByteArray> roleNames() const;
+    Q_INVOKABLE QVariant get(int index, int role) const;
     QString source() const;
     void setSource(const QString& filePath);
     Q_INVOKABLE QString errorString() const;

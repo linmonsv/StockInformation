@@ -146,6 +146,11 @@ QHash<int, QByteArray> StockListModel::roleNames() const
 {
     return m_dptr->m_roleNames;
 }
+QVariant StockListModel::get(int index, int role) const
+{
+    StockData *d = m_dptr->m_stocks[index];
+    return d->at(role);
+}
 QString StockListModel::source() const
 {
     return m_dptr->m_strXmlFile;
