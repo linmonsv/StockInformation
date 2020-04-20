@@ -183,11 +183,16 @@ Window {
                             font.pixelSize: 20;
                             Layout.preferredWidth: 160;
                         }
-                        Text {
-                            text: qsTr("更新日期时间");
-                            font.bold: true;
-                            font.pixelSize: 20;
-                            Layout.preferredWidth: 280;
+                        Rectangle {
+                            width: 180;
+                            height: parent.height;
+                            Text {
+                                anchors.centerIn: parent;
+                                text: qsTr("更新日期时间");
+                                font.bold: true;
+                                font.pixelSize: 20;
+                                Layout.preferredWidth: 280;
+                            }
                         }
                     }
                 }
