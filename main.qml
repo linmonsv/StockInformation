@@ -7,7 +7,7 @@ import com.qt.CModel 1.0
 Window {
     visible: true
     width: 1920
-    height: 480
+    height: 800
     title: qsTr("股票信息")
 
     Rectangle {
@@ -245,35 +245,62 @@ Window {
                                 var code = listView.model.get(listView.currentIndex, 0);
                                 var name = listView.model.get(listView.currentIndex, 1);
                                 listView.footerItem.text = code + ", " + name;
-                                canvas_Min.minuteLine = "http://image.sinajs.cn/newchart/min/n/sz" + code + ".gif";
+                                canvas_Min.minuteLine = "http://image.sinajs.cn/newchart/min/n/" + code + ".gif";
                                 canvas_Min.loadImage(canvas_Min.minuteLine);
                                 canvas_Min.clear_canvas();
                                 canvas_Min.requestPaint();
+                                canvas_K_daily.minuteLine = "http://image.sinajs.cn/newchart/daily/n/" + code + ".gif";
+                                canvas_K_daily.loadImage(canvas_K_daily.minuteLine);
+                                canvas_K_daily.clear_canvas();
+                                canvas_K_daily.requestPaint();
                             } else {
                                 listView.footerItem.text = "";
                             }
                         }
                     }
                 }
-                Canvas {
-                    id: canvas_Min;
-                    //anchors.left: rectangle_Information.right;
-                    //anchors.leftMargin: 4;
-                    width: 545;
-                    height: 300;
-                    property var minuteLine: "http://image.sinajs.cn/newchart/min/n/sz000001.gif";
+                ColumnLayout {
+                    Canvas {
+                        id: canvas_Min;
+                        //anchors.left: rectangle_Information.right;
+                        //anchors.leftMargin: 4;
+                        width: 545;
+                        height: 300;
+                        property var minuteLine: "http://image.sinajs.cn/newchart/min/n/sz000001.gif";
 
-                    onPaint: {
-                        var ctx = getContext("2d");
-                        ctx.drawImage(minuteLine, 0, 0);
+                        onPaint: {
+                            var ctx = getContext("2d");
+                            ctx.drawImage(minuteLine, 0, 0);
+                        }
+                        Component.onCompleted: {
+                            loadImage(minuteLine);
+                        }
+                        onImageLoaded: requestPaint();
+                        function clear_canvas() {
+                            var ctx = getContext("2d");
+                            ctx.reset();
+                        }
                     }
-                    Component.onCompleted: {
-                        loadImage(minuteLine);
-                    }
-                    onImageLoaded: requestPaint();
-                    function clear_canvas() {
-                        var ctx = getContext("2d");
-                        ctx.reset();
+                    Canvas {
+                        id: canvas_K_daily;
+                        //anchors.left: rectangle_Information.right;
+                        //anchors.leftMargin: 4;
+                        width: 545;
+                        height: 300;
+                        property var minuteLine: "http://image.sinajs.cn/newchart/daily/n/sz000001.gif";
+
+                        onPaint: {
+                            var ctx = getContext("2d");
+                            ctx.drawImage(minuteLine, 0, 0);
+                        }
+                        Component.onCompleted: {
+                            loadImage(minuteLine);
+                        }
+                        onImageLoaded: requestPaint();
+                        function clear_canvas() {
+                            var ctx = getContext("2d");
+                            ctx.reset();
+                        }
                     }
                 }
             }
