@@ -6,12 +6,12 @@ import com.qt.CModel 1.0
 
 Window {
     visible: true
-    width: 1280
+    width: 1920
     height: 480
     title: qsTr("股票信息")
 
     Rectangle {
-        width: 1024
+        width: 1500
         height: 400
 
         ColumnLayout {
@@ -82,58 +82,47 @@ Window {
                             Layout.preferredWidth: 100;
                         }
                         Text {
-                            text: latestPrice;
-                            color: wrapper.ListView.isCurrentItem ? "red" : "black";
-                            font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
-                            Layout.preferredWidth: 80;
-                        }
-                        Text {
-                            text: change;
-                            color: wrapper.ListView.isCurrentItem ? "red" : "black";
-                            font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
-                            Layout.preferredWidth: 80;
-                        }
-                        Text {
-                            text: quoteChange;
-                            color: wrapper.ListView.isCurrentItem ? "red" : "black";
-                            font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
-                            Layout.preferredWidth: 80;
-                        }
-                        Text {
-                            text: highestLowest;
+                            text: today_start_price;
                             color: wrapper.ListView.isCurrentItem ? "red" : "black";
                             font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
                             Layout.preferredWidth: 120;
                         }
                         Text {
-                            text: takeProfitStopLoss;
+                            text: yesterday_end_price;
                             color: wrapper.ListView.isCurrentItem ? "red" : "black";
                             font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
                             Layout.preferredWidth: 120;
                         }
-                    }
-                }
-            }
-            Component {
-                id: stockModel;
-                ListModel {
-                    ListElement {
-                        code: "1";
-                        name: "2";
-                        latestPrice: "3";
-                        change: "4";
-                        quoteChange: "5";
-                        highestLowest: "6";
-                        takeProfitStopLoss: "7";
-                    }
-                    ListElement {
-                        code: "21";
-                        name: "22";
-                        latestPrice: "23";
-                        change: "24";
-                        quoteChange: "25";
-                        highestLowest: "26";
-                        takeProfitStopLoss: "27";
+                        Text {
+                            text: current_price;
+                            color: wrapper.ListView.isCurrentItem ? "red" : "black";
+                            font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
+                            Layout.preferredWidth: 120;
+                        }
+                        Text {
+                            text: today_highestLowest;
+                            color: wrapper.ListView.isCurrentItem ? "red" : "black";
+                            font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
+                            Layout.preferredWidth: 160;
+                        }
+                        Text {
+                            text: trans_total;
+                            color: wrapper.ListView.isCurrentItem ? "red" : "black";
+                            font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
+                            Layout.preferredWidth: 180;
+                        }
+                        Text {
+                            text: trans_amount;
+                            color: wrapper.ListView.isCurrentItem ? "red" : "black";
+                            font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
+                            Layout.preferredWidth: 160;
+                        }
+                        Text {
+                            text: update_date_time;
+                            color: wrapper.ListView.isCurrentItem ? "red" : "black";
+                            font.pixelSize: wrapper.ListView.isCurrentItem ? 22 : 18;
+                            Layout.preferredWidth: 280;
+                        }
                     }
                 }
             }
@@ -159,34 +148,46 @@ Window {
                             Layout.preferredWidth: 100;
                         }
                         Text {
-                            text: qsTr("最新价");
-                            font.bold: true;
-                            font.pixelSize: 20;
-                            Layout.preferredWidth: 80;
-                        }
-                        Text {
-                            text: qsTr("涨跌额");
-                            font.bold: true;
-                            font.pixelSize: 20;
-                            Layout.preferredWidth: 80;
-                        }
-                        Text {
-                            text: qsTr("涨跌幅");
-                            font.bold: true;
-                            font.pixelSize: 20;
-                            Layout.preferredWidth: 80;
-                        }
-                        Text {
-                            text: qsTr("最高/最低");
+                            text: qsTr("今日开盘价");
                             font.bold: true;
                             font.pixelSize: 20;
                             Layout.preferredWidth: 120;
                         }
                         Text {
-                            text: qsTr("止盈/止损");
+                            text: qsTr("昨日收盘价");
                             font.bold: true;
                             font.pixelSize: 20;
                             Layout.preferredWidth: 120;
+                        }
+                        Text {
+                            text: qsTr("当前价格");
+                            font.bold: true;
+                            font.pixelSize: 20;
+                            Layout.preferredWidth: 120;
+                        }
+                        Text {
+                            text: qsTr("今日最高/低价");
+                            font.bold: true;
+                            font.pixelSize: 20;
+                            Layout.preferredWidth: 160;
+                        }
+                        Text {
+                            text: qsTr("成交的股票数(百股)");
+                            font.bold: true;
+                            font.pixelSize: 20;
+                            Layout.preferredWidth: 180;
+                        }
+                        Text {
+                            text: qsTr("成交金额(万元)");
+                            font.bold: true;
+                            font.pixelSize: 20;
+                            Layout.preferredWidth: 160;
+                        }
+                        Text {
+                            text: qsTr("更新日期时间");
+                            font.bold: true;
+                            font.pixelSize: 20;
+                            Layout.preferredWidth: 280;
                         }
                     }
                 }
@@ -205,7 +206,7 @@ Window {
             RowLayout {
                 Rectangle {
                     id: rectangle_Information;
-                    width: 700
+                    width: 1365
                     height: 400
 
                     //anchors.top: row_top.bottom;
@@ -243,18 +244,7 @@ Window {
                             if(listView.currentIndex >= 0) {
                                 var code = listView.model.get(listView.currentIndex, 0);
                                 var name = listView.model.get(listView.currentIndex, 1);
-                                var latestPrice = listView.model.get(listView.currentIndex, 2);
-                                var change = listView.model.get(listView.currentIndex, 3);
-                                var quoteChange = listView.model.get(listView.currentIndex, 4);
-                                var highestLowest = listView.model.get(listView.currentIndex, 5);
-                                var takeProfitStopLoss = listView.model.get(listView.currentIndex, 6);
-                                listView.footerItem.text = code + ", " +
-                                        name + ", " +
-                                        latestPrice + ", " +
-                                        change + ", " +
-                                        quoteChange + ", " +
-                                        highestLowest + ", " +
-                                        takeProfitStopLoss;
+                                listView.footerItem.text = code + ", " + name;
                                 canvas_Min.minuteLine = "http://image.sinajs.cn/newchart/min/n/sz" + code + ".gif";
                                 canvas_Min.loadImage(canvas_Min.minuteLine);
                                 canvas_Min.clear_canvas();

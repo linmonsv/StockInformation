@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QDateTime>
+#include <QTextCodec>
 
 typedef QVector<QString> StockData;
 class StockListModelPrivate
@@ -15,11 +16,13 @@ public:
         int role = Qt::UserRole;
         m_roleNames.insert(role++, "code");
         m_roleNames.insert(role++, "name");
-        m_roleNames.insert(role++, "latestPrice");
-        m_roleNames.insert(role++, "change");
-        m_roleNames.insert(role++, "quoteChange");
-        m_roleNames.insert(role++, "highestLowest");
-        m_roleNames.insert(role++, "takeProfitStopLoss");
+        m_roleNames.insert(role++, "today_start_price");
+        m_roleNames.insert(role++, "yesterday_end_price");
+        m_roleNames.insert(role++, "current_price");
+        m_roleNames.insert(role++, "today_highestLowest");
+        m_roleNames.insert(role++, "trans_total");
+        m_roleNames.insert(role++, "trans_amount");
+        m_roleNames.insert(role++, "update_date_time");
     }
     ~StockListModelPrivate()
     {
@@ -61,26 +64,14 @@ public:
                     else if(elementName == "name")
                     {
                         stock->append(reader.readElementText().toUtf8());
-                    }
-                    else if(elementName == "latestPrice")
-                    {
-                        stock->append(reader.readElementText().toLatin1());
-                    }
-                    else if(elementName == "change")
-                    {
-                        stock->append(reader.readElementText().toLatin1());
-                    }
-                    else if(elementName == "quoteChange")
-                    {
-                        stock->append(reader.readElementText().toLatin1());
-                    }
-                    else if(elementName == "highestLowest")
-                    {
-                        stock->append(reader.readElementText().toLatin1());
-                    }
-                    else if(elementName == "takeProfitStopLoss")
-                    {
-                        stock->append(reader.readElementText().toLatin1());
+
+                        stock->append("");
+                        stock->append("");
+                        stock->append("");
+                        stock->append("");
+                        stock->append("");
+                        stock->append("");
+                        stock->append("");
                     }
                 }
                 else if(reader.isEndElement())
@@ -155,6 +146,12 @@ QVariant StockListModel::get(int index, int role) const
     StockData *d = m_dptr->m_stocks[index];
     return d->at(role);
 }
+void StockListModel::update(int index, int role, QString value)
+{
+    beginResetModel();
+    (*m_dptr->m_stocks[index])[role] = value;
+    endResetModel();
+}
 QString StockListModel::source() const
 {
     return m_dptr->m_strXmlFile;
@@ -192,4 +189,66 @@ void StockListModel::remove(int index)
 void StockListModel::onTimeout()
 {
     qDebug() << "Timeout";
+    QString strUrl = "http://hq.sinajs.cn/list=sz000001";
+    QUrl qurl(strUrl);
+    QNetworkRequest req(qurl);
+    m_reply = m_nam.get(req);
+    connect(m_reply, SIGNAL(error(QNetworkReply::NetworkError)),
+            this, SLOT(onRefreshError(QNetworkReply::NetworkError)));
+    connect(m_reply, SIGNAL(finished()), this, SLOT(onRefreshFinished()));
+}
+
+void StockListModel::onRefreshError(QNetworkReply::NetworkError code)
+{
+    m_reply->disconnect(this);
+    m_reply->deleteLater();
+    m_reply = 0;
+}
+
+void StockListModel::onRefreshFinished()
+{
+    m_reply->disconnect(this);
+    if(m_reply->error() != QNetworkReply::NoError)
+    {
+        qDebug() << "StockProvider::refreshFinished, error - " << m_reply->errorString();
+        return;
+    }
+    else if(m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200)
+    {
+        qDebug() << "StockProvider::refreshFinished, but server return - " << m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        return;
+    }
+    QString Result = QString::fromLocal8Bit(m_reply->readAll());
+
+    qDebug() << Result;
+    auto stockArray = Result.split(";");
+    foreach(QString oneStock, stockArray) {
+        qDebug() << oneStock;
+        if(oneStock.length() < 20)
+            break;
+        auto code_informations = oneStock.split("=");
+        qDebug() << "code : " << code_informations[0].mid(14);
+        auto informations = code_informations[1].split(",");
+        qDebug() << "股票名字 : " << informations[0];
+        qDebug() << "今日开盘价 : " << informations[1];
+        qDebug() << "昨日收盘价 : " << informations[2];
+        qDebug() << "当前价格 : " << informations[3];
+        qDebug() << "今日最高/低价 : " << informations[4] + "/" + informations[5];
+        qDebug() << "成交的股票数 : " << informations[8];
+        qDebug() << "成交金额 : " << informations[9];
+        qDebug() << "最近更新日期时间 : " << informations[30] + " " + informations[31];
+        {
+            update(0, 1, informations[0]);
+            update(0, 2, informations[1]);
+            update(0, 3, informations[2]);
+            update(0, 4, informations[3]);
+            update(0, 5, informations[4] + "/" + informations[5]);
+            update(0, 6, QString("%1").arg(informations[8].toDouble() / 100.0));
+            update(0, 7, QString("%1").arg(informations[9].toDouble() / 10000.0));
+            update(0, 8, informations[30] + " " + informations[31]);
+        }
+    }
+
+    m_reply->deleteLater();
+    m_reply = 0;
 }
