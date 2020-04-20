@@ -241,19 +241,21 @@ Window {
 
                         onCurrentIndexChanged: {
                             if(listView.currentIndex >= 0) {
-                                var data = listView.model.get(listView.currentIndex);
-                                listView.footerItem.text = data.code + ", " +
-                                        data.name + ", " +
-                                        data.latestPrice + ", " +
-                                        data.change + ", " +
-                                        data.quoteChange + ", " +
-                                        data.highestLowest + ", " +
-                                        data.takeProfitStopLoss;
-                                if(listView.currentIndex % 2) {
-                                    canvas_Min.minuteLine = canvas_Min.minuteLine1;
-                                } else {
-                                    canvas_Min.minuteLine = canvas_Min.minuteLine2;
-                                }
+                                var code = listView.model.get(listView.currentIndex, 0);
+                                var name = listView.model.get(listView.currentIndex, 1);
+                                var latestPrice = listView.model.get(listView.currentIndex, 2);
+                                var change = listView.model.get(listView.currentIndex, 3);
+                                var quoteChange = listView.model.get(listView.currentIndex, 4);
+                                var highestLowest = listView.model.get(listView.currentIndex, 5);
+                                var takeProfitStopLoss = listView.model.get(listView.currentIndex, 6);
+                                listView.footerItem.text = code + ", " +
+                                        name + ", " +
+                                        latestPrice + ", " +
+                                        change + ", " +
+                                        quoteChange + ", " +
+                                        highestLowest + ", " +
+                                        takeProfitStopLoss;
+                                canvas_Min.minuteLine = "http://image.sinajs.cn/newchart/min/n/sz" + code + ".gif";
                                 canvas_Min.loadImage(canvas_Min.minuteLine);
                                 canvas_Min.clear_canvas();
                                 canvas_Min.requestPaint();
@@ -269,17 +271,13 @@ Window {
                     //anchors.leftMargin: 4;
                     width: 545;
                     height: 300;
-                    property var minuteLine1: "http://image.sinajs.cn/newchart/min/n/sz000001.gif";
-                    property var minuteLine2: "http://image.sinajs.cn/newchart/min/n/sh000002.gif";
-
-                    property var minuteLine: ""
+                    property var minuteLine: "http://image.sinajs.cn/newchart/min/n/sz000001.gif";
 
                     onPaint: {
                         var ctx = getContext("2d");
                         ctx.drawImage(minuteLine, 0, 0);
                     }
                     Component.onCompleted: {
-                        minuteLine = minuteLine1;
                         loadImage(minuteLine);
                     }
                     onImageLoaded: requestPaint();
