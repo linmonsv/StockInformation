@@ -185,7 +185,7 @@ void StockListModel::update(int index, int role, QString value)
 }
 void StockListModel::add(QString code)
 {
-    beginResetModel();
+    beginInsertRows(QModelIndex(), m_dptr->m_stocks.size(), m_dptr->m_stocks.size());
     if(code.startsWith('6'))
     {
         code.prepend("sh");
@@ -205,7 +205,7 @@ void StockListModel::add(QString code)
     stock->append("");
     stock->append("");
     m_dptr->m_stocks.append(stock);
-    endResetModel();
+    endInsertRows();
 }
 QString StockListModel::source() const
 {
