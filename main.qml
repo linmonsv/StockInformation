@@ -43,6 +43,8 @@ Window {
                     text: qsTr("添加")
                     onClicked: {
                         console.log("add code : " + textInput_Code.text)
+                        if(textInput_Code.text.length == 6)
+                            listView.model.add(textInput_Code.text);
                     }
                 }
                 Text {

@@ -152,7 +152,7 @@ StockListModel::StockListModel(QObject* parent)
 {
     qsrand(QDateTime::currentDateTime().toTime_t());
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
-    m_timer.start(3000);
+    m_timer.start(30000);
 }
 StockListModel::~StockListModel()
 {
@@ -181,6 +181,30 @@ void StockListModel::update(int index, int role, QString value)
 {
     beginResetModel();
     (*m_dptr->m_stocks[index])[role] = value;
+    endResetModel();
+}
+void StockListModel::add(QString code)
+{
+    beginResetModel();
+    if(code.startsWith('6'))
+    {
+        code.prepend("sh");
+    }
+    else
+    {
+        code.prepend("sz");
+    }
+    StockData* stock = new StockData();
+    stock->append(code);
+    stock->append("");
+    stock->append("");
+    stock->append("");
+    stock->append("");
+    stock->append("");
+    stock->append("");
+    stock->append("");
+    stock->append("");
+    m_dptr->m_stocks.append(stock);
     endResetModel();
 }
 QString StockListModel::source() const
@@ -219,7 +243,7 @@ void StockListModel::remove(int index)
 }
 void StockListModel::onTimeout()
 {
-    m_timer.stop();//TODO ignore it if you really want to use this code.
+    //m_timer.stop();//TODO ignore it if you really want to use this code.
     QString strUrl_start = "http://hq.sinajs.cn/list=";
     QString strUrl = "";
     auto stock_total = m_dptr->m_stocks.size();
@@ -267,6 +291,9 @@ void StockListModel::onRefreshFinished()
         auto code_informations = stockArray[index].split("=");
         qDebug() << "code : " << code_informations[0].mid(14);
         auto informations = code_informations[1].split(",");
+        if(informations.size() < 32) {
+            continue;
+        }
         qDebug() << "股票名字 : " << informations[0];
         qDebug() << "今日开盘价 : " << informations[1];
         qDebug() << "昨日收盘价 : " << informations[2];

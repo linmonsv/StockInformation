@@ -18,6 +18,7 @@ public:
     QHash<int, QByteArray> roleNames() const;
     Q_INVOKABLE QVariant get(int index, int role) const;
     void update(int index, int role, QString value);
+    Q_INVOKABLE void add(QString code);
     QString source() const;
     void setSource(const QString& filePath);
     Q_INVOKABLE QString errorString() const;
