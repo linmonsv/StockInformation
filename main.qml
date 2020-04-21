@@ -16,9 +16,9 @@ Window {
 
         ColumnLayout {
             anchors.top: parent.top;
-            anchors.topMargin: 4;
+            anchors.topMargin: 14;
             anchors.left: parent.left;
-            anchors.leftMargin: 4;
+            anchors.leftMargin: 14;
             height: 180;
             spacing: 4;
 
@@ -214,7 +214,7 @@ Window {
             RowLayout {
                 Rectangle {
                     id: rectangle_Information;
-                    width: 1365
+                    width: 1355
                     height: 620
 
                     //anchors.top: row_top.bottom;
