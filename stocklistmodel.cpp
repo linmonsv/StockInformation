@@ -152,7 +152,7 @@ StockListModel::StockListModel(QObject* parent)
 {
     qsrand(QDateTime::currentDateTime().toTime_t());
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
-    m_timer.start(30000);
+    m_timer.start(5000);
 }
 StockListModel::~StockListModel()
 {
@@ -289,19 +289,19 @@ void StockListModel::onRefreshFinished()
         if(stockArray[index].length() < 20)
             break;
         auto code_informations = stockArray[index].split("=");
-        qDebug() << "code : " << code_informations[0].mid(14);
+        //qDebug() << "code : " << code_informations[0].mid(14);
         auto informations = code_informations[1].split(",");
         if(informations.size() < 32) {
             continue;
         }
-        qDebug() << "股票名字 : " << informations[0];
-        qDebug() << "今日开盘价 : " << informations[1];
-        qDebug() << "昨日收盘价 : " << informations[2];
-        qDebug() << "当前价格 : " << informations[3];
-        qDebug() << "今日最高/低价 : " << informations[4] + "/" + informations[5];
-        qDebug() << "成交的股票数 : " << informations[8];
-        qDebug() << "成交金额 : " << informations[9];
-        qDebug() << "最近更新日期时间 : " << informations[30] + " " + informations[31];
+        //qDebug() << "股票名字 : " << informations[0];
+        //qDebug() << "今日开盘价 : " << informations[1];
+        //qDebug() << "昨日收盘价 : " << informations[2];
+        //qDebug() << "当前价格 : " << informations[3];
+        //qDebug() << "今日最高/低价 : " << informations[4] + "/" + informations[5];
+        //qDebug() << "成交的股票数 : " << informations[8];
+        //qDebug() << "成交金额 : " << informations[9];
+        //qDebug() << "最近更新日期时间 : " << informations[30] + " " + informations[31];
         {
             update(index, 1, informations[0].mid(1));
             update(index, 2, informations[1]);
